@@ -17,7 +17,7 @@ class CreateUsuarioPlanosTable extends Migration
             $table->bigIncrements('id');
             $table->integer('nivel');
             $table->unsignedBigInteger('usuario_id');
-            $table->unsignedBigInteger('acoes_id');
+            $table->unsignedBigInteger('plano_id');
             $table->timestamps();
 
             $table->foreign('usuario_id')->references('id')->on('usuarios');

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsuarioAcoesTable extends Migration
+class CreateImagensTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateUsuarioAcoesTable extends Migration
      */
     public function up()
     {
-        Schema::create('usuario_acoes', function (Blueprint $table) {
+        Schema::create('imagens', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('usuario_id');
-            $table->unsignedBigInteger('acao_id');
+            $table->string('nome')->unique();
+            $table->unsignedBigInteger('imageavel_id')->nullable();
+            $table->string('imageavel_type')->nullable();
             $table->timestamps();
-
-            $table->foreign('usuario_id')->references('id')->on('usuarios');
-            $table->foreign('acao_id')->references('id')->on('acoes');
         });
     }
 
@@ -31,6 +29,6 @@ class CreateUsuarioAcoesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('usuario_acoes');
+        Schema::dropIfExists('imagens');
     }
 }

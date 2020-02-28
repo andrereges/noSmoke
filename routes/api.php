@@ -36,3 +36,7 @@ Route::resource('entrevistas', 'API\EntrevistaController')->names([
 Route::resource('perguntas', 'API\PerguntaController')->names([
     'create' => 'perguntas.create'
 ]);
+
+Route::resource('cigarro-marcas', 'API\CigarroMarcaController')->names([
+    'create' => 'cigarroMarcas.create'
+]);
