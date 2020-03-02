@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class ImagensTableSeeder extends Seeder
+class CigarroMarcaFiltrosTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,10 +12,10 @@ class ImagensTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('imagens')->insert([
-            'nome' => 'Rothmans',
-            'imageavel_id' => 1,
-            'imageavel_type' => 'App\CigarroMarca',
+        DB::table('cigarro_marca_filtros')->insert([
+            'id' => 1,
+            'cigarro_marca_id' => 1,
+            'cigarro_filtro_id' => 1,
             'created_at' => new DateTime(),
             'updated_at' => new DateTime()
         ]);
