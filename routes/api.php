@@ -37,10 +37,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     'create' => 'perguntas.create'
 // ]);
 
-Route::post('cigarro-marcas/{id}', 'API\CigarroMarcaController@update')->name('cigarroMarcas.update');
-
 Route::apiResource('cigarro-marcas', 'API\CigarroMarcaController')->names([
     'create' => 'cigarroMarcas.create'
 ])->only([
-    'create', 'store', 'destroy','index', 'show'
-])->except(['update']);
+    'update', 'store', 'destroy','index', 'show'
+]);

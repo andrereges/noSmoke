@@ -13,7 +13,6 @@ class CigarroMarcaFiltrosTableSeeder extends Seeder
     public function run()
     {
         DB::table('cigarro_marca_filtros')->insert([
-            'id' => 1,
             'cigarro_marca_id' => 1,
             'cigarro_filtro_id' => 1,
             'created_at' => new DateTime(),

@@ -7,11 +7,13 @@ use App\CigarroMarca;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CigarroMarcaResquest;
 use App\Http\Resources\CigarroMarcaCollection;
+use App\Http\Resources\CigarroMarcaResource;
 use App\Imagem;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+
 class CigarroMarcaController extends Controller
 {
     /**
@@ -21,7 +23,7 @@ class CigarroMarcaController extends Controller
      */
     public function index()
     {        
-        return new CigarroMarcaCollection(CigarroMarca::with(['imagem', 'filtros'])->paginate());
+        return new CigarroMarcaCollection(CigarroMarca::paginate());
     }
 
     /**
@@ -46,7 +48,7 @@ class CigarroMarcaController extends Controller
                 $imagem = new Imagem();
                 $imagem->nome = $cigarroMarca->nome.'.'.$imagemUpload->extension();
                 $cigarroMarca->imagem()->save($imagem);
-                Storage::putFileAs(CigarroMarca::CAMINHO_IMAGEM, $imagemUpload, $imagem->nome);
+                Storage::putFileAs($cigarroMarca->getPathImagemAttribute(), $imagemUpload, $imagem->nome);
             }
             
             return response()
@@ -69,7 +71,7 @@ class CigarroMarcaController extends Controller
     public function show($id)
     {
         try {
-            return new CigarroMarcaCollection([CigarroMarca::with(['imagem', 'filtros'])->findOrFail($id)]);
+            return new CigarroMarcaResource(CigarroMarca::findOrFail($id));
         } catch (Exception $exception) {
             return response()
                 ->json([
@@ -100,26 +102,24 @@ class CigarroMarcaController extends Controller
             $imagemUpload = $request->file('imagem');
 
             if ($imagemUpload) {
-                Storage::delete(CigarroMarca::CAMINHO_IMAGEM.$cigarroMarca->imagem()->get()->last()->nome);
+                Storage::delete($cigarroMarca->imagem()->get()->getFullPathImagemAttribute());
 
                 $imagem = $cigarroMarca->imagem()->get()->last();
                 $imagem->nome = $cigarroMarca->nome.'.'.$imagemUpload->extension();
                 $cigarroMarca->imagem()->save($imagem);
-                Storage::putFileAs(CigarroMarca::CAMINHO_IMAGEM, $imagemUpload, $imagem->nome);
+                Storage::putFileAs($cigarroMarca->getPathImagemAttribute(), $imagemUpload, $imagem->nome);
             } else {
                 $imagem = $cigarroMarca->imagem()->get()->last();
-                $extensao = array_slice(explode('.', $imagem->nome), -1)[0];
-                $oldNome = $imagem->nome;
-                $newNome = sprintf('%s.%s', $cigarroMarca->nome, $extensao);
-                
-                $imagem->nome = $newNome;
+                $oldFullPathImagemAttribute = $imagem->getFullPathImagemAttribute();
+
+                $imagem->nome = sprintf('%s.%s', $cigarroMarca->nome, $imagem->getExtensaoAttribute());;
                 $cigarroMarca->imagem()->save($imagem);
 
-                if ($oldNome != $newNome) {
+                if ($oldFullPathImagemAttribute != $cigarroMarca->getFullPathImagemAttribute()) {
                     Storage::move(
-                        CigarroMarca::CAMINHO_IMAGEM.$oldNome, 
-                        CigarroMarca::CAMINHO_IMAGEM.$newNome)
-                    ;
+                        $oldFullPathImagemAttribute, 
+                        $cigarroMarca->getFullPathImagemAttribute()
+                    );
                 }
             }
 
@@ -146,7 +146,7 @@ class CigarroMarcaController extends Controller
             $cigarroMarca = CigarroMarca::findOrFail($id);
 
             if ($cigarroMarca->imagem()->get()->first()) {
-                Storage::delete(CigarroMarca::CAMINHO_IMAGEM.$cigarroMarca->imagem()->get()->first()->nome);
+                Storage::delete($cigarroMarca->imagem()->get()->first()->getFullPathImagemAttribute());
             }
             
             $cigarroMarca->imagem()->delete();

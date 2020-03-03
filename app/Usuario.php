@@ -11,13 +11,13 @@ class Usuario extends Authenticatable
     use Notifiable;
 
     protected $fillable = [
-        'nome', 'login', 'senha',
+        'nome', 'email', 'senha'
     ];
     protected $hidden = [
         'senha', 'remember_token',
     ];
     protected $casts = [
-        'login_verified_at' => 'datetime',
+        'email_verified_at' => 'datetime',
     ];
     protected $table = "usuarios";
 }

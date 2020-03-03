@@ -13,7 +13,6 @@ class CigarroMarcasTableSeeder extends Seeder
     public function run()
     {
         DB::table('cigarro_marcas')->insert([
-            'id' => 1,
             'nome' => 'Rothmans',
             'preco' => 6.00,
             'quantidade' => 20,

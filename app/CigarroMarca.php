@@ -8,9 +8,7 @@ use App\CigarroFiltro;
 
 class CigarroMarca extends Model
 {
-    protected $fillable = ['nome'];
-
-    const CAMINHO_IMAGEM = 'static/imagens/cigarro-marcas/';
+    protected $fillable = ['nome', 'preco', 'quantidade'];
 
     public function imagem()
     {
@@ -21,5 +19,15 @@ class CigarroMarca extends Model
     {
         return $this->belongsToMany(CigarroFiltro::class, 'cigarro_marca_filtros', 'cigarro_marca_id', 'cigarro_filtro_id')
             ->withTimestamps();
+    }
+
+    public function getPathImagemAttribute()
+    {
+        return 'public/static/imagens/cigarro-marcas/';
+    }
+
+    public function getFullPathImagemAttribute()
+    {
+        return sprintf('%s%s', $this->getPathImagemAttribute, $this->nome);
     }
 }
